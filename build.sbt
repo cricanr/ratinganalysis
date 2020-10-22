@@ -8,5 +8,7 @@ ThisBuild / organizationName := "example"
 lazy val root = (project in file("."))
   .settings(
     name := "ratinganalysis",
-    libraryDependencies += scalaTest % Test
+    libraryDependencies ++= Seq(
+      "com.github.tototoshi" %% "scala-csv" % "1.3.6",
+      scalaTest % Test)
   )
