@@ -1,12 +1,22 @@
 package services
 
+import com.google.inject.Inject
+import csvparser.IProductParser
+import io.circe.generic.auto._
+import io.circe.syntax.EncoderOps
 import models.{Product, ProductValidator, ProductsRatingsSummary}
 
 trait IProductsService {
+  def getRawProducts: List[List[String]]
   def getProductsRatingsSummary(productsRaw: List[List[String]]): ProductsRatingsSummary
+  def getProductsRatingsSummaryAsJson(productsRatingsSummary: ProductsRatingsSummary): String
 }
 
-class ProductsService extends IProductsService {
+class ProductsService @Inject()(productParser: IProductParser) extends IProductsService {
+  override def getRawProducts: List[List[String]] = {
+    productParser.readAllProducts()
+  }
+
   override def getProductsRatingsSummary(productsRaw: List[List[String]]): ProductsRatingsSummary = {
     val eitherProducts = productsRaw.map { productLine =>
       val product = Product(productLine.head, productLine(1), productLine(2), productLine(3).toInt)
@@ -42,4 +52,7 @@ class ProductsService extends IProductsService {
     productsRatingsSummary
   }
 
+  override def getProductsRatingsSummaryAsJson(productsRatingsSummary: ProductsRatingsSummary): String = {
+    productsRatingsSummary.asJson.toString()
+  }
 }
