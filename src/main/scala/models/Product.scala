@@ -2,17 +2,8 @@ package models
 
 import cats.data.ValidatedNec
 import cats.implicits.catsSyntaxTuple4Semigroupal
-import models.ProductValidatorNec.ValidationResult
 
 final case class Product(buyerId: String, shopId: String, productId: String, rating: Int)
-
-object Product {
-//  def apply(buyerId: String, shopId: String, productId: String, rating: Int): ValidationResult[Product] = {
-    import ProductValidator._
-//    (validateBuyerId(buyerId), validateProductId(productId), validateShopId(shopId), validateRating(rating))
-//      .mapN((a,b,c,d) => Product(a,b,c,d))
-//  }
-}
 
 sealed trait DomainValidation {
   def errorMessage: String
@@ -36,7 +27,7 @@ sealed trait ProductValidator {
   def validateProductId(productId: String): Either[DomainValidation, String] = {
     val maybeNumberAtEnd = productId.substring(productId.lastIndexWhere(p => p == '-')).toIntOption
     Either.cond(
-      maybeNumberAtEnd.exists(numberAtEnd => productId.matches("^[a-zA-Z][a-zA-Z]*-[0-9]+$") && numberAtEnd >= 1 && numberAtEnd <= 99),
+      maybeNumberAtEnd.exists(numberAtEnd => productId.matches("^([a-zA-Z]{1}[a-zA-Z0-9]+-)+(([0-9][1-9])|([1-9][0-9])|[1-9])")),
       productId,
       ProductIdInvalid
     )
@@ -48,6 +39,11 @@ sealed trait ProductValidator {
       rating,
       RatingInvalid
     )
+
+  def validateProduct(buyerId: String, shopId: String, productId: String, rating: Int): Either[DomainValidation, Product] = {
+    (validateBuyerId(buyerId), validateProductId(productId), validateShopId(shopId), validateRating(rating))
+      .mapN(Product)
+  }
 }
 
 sealed trait ProductValidatorNec {
