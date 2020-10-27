@@ -62,6 +62,7 @@ class ProductTest extends WordSpec with Matchers {
     "return a validation success" in {
       val validatedBuyerId = ProductValidator.validateBuyerId("buyer1Id")
       validatedBuyerId.isRight shouldBe true
+      validatedBuyerId.map(buyerId => buyerId shouldBe "buyer1Id")
     }
   }
 
@@ -69,6 +70,7 @@ class ProductTest extends WordSpec with Matchers {
     "return a validation success" in {
       val validatedBuyerId = ProductValidator.validateBuyerId("buyerId")
       validatedBuyerId.isRight shouldBe true
+      validatedBuyerId.map(buyerId => buyerId shouldBe "buyerId")
     }
   }
 
@@ -92,6 +94,7 @@ class ProductTest extends WordSpec with Matchers {
     "return a validation success" in {
       val validatedShopId = ProductValidator.validateShopId("shopId1")
       validatedShopId.isRight shouldBe true
+      validatedShopId.map(shopId => shopId shouldBe "shopId1")
     }
   }
 
@@ -99,6 +102,7 @@ class ProductTest extends WordSpec with Matchers {
     "return a validation success" in {
       val validatedShopId = ProductValidator.validateShopId("shopId")
       validatedShopId.isRight shouldBe true
+      validatedShopId.map(shopId => shopId shouldBe "shopId")
     }
   }
 
