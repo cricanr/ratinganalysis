@@ -41,7 +41,7 @@ sealed trait ProductValidator {
     )
 
   def validateProduct(buyerId: String, shopId: String, productId: String, rating: Int): Either[DomainValidation, Product] = {
-    (validateBuyerId(buyerId), validateProductId(productId), validateShopId(shopId), validateRating(rating))
+    (validateBuyerId(buyerId), validateShopId(shopId), validateProductId(productId), validateRating(rating))
       .mapN(Product)
   }
 }
