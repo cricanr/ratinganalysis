@@ -3,6 +3,7 @@ package csvparser
 import java.io.FileNotFoundException
 
 import com.typesafe.config.Config
+import models.Product
 import org.mockito.Mockito.when
 import org.scalatest.{Matchers, WordSpec}
 import org.scalatestplus.mockito.MockitoSugar
@@ -60,6 +61,51 @@ class ProductCSVParserTest extends WordSpec with Matchers with MockitoSugar {
         eitherProductCSVParser match {
           case Left(_: FileNotFoundException) => true
           case _ => fail()
+        }
+      }
+    }
+
+    "creating a Product from a valid product raw csv line" should {
+      "return the Product" in {
+        val productRaw = List("buyer1", "veloshop", "chain-01", "4")
+        ProductCSVParser.getProductFromCsvLine(productRaw) shouldBe Right(Product("buyer1", "veloshop", "chain-01", 4))
+      }
+    }
+
+    "creating a Product from a valid product raw csv line with more columns then needed" should {
+      "return the Product" in {
+        val productRaw = List("buyer1", "veloshop", "chain-01", "4", "tesla-model-3")
+        ProductCSVParser.getProductFromCsvLine(productRaw) shouldBe Right(Product("buyer1", "veloshop", "chain-01", 4))
+      }
+    }
+
+    "creating a Product from an empty product raw csv line" should {
+      "return a failure" in {
+        val productRaw = List.empty
+        val eitherProduct = ProductCSVParser.getProductFromCsvLine(productRaw)
+        eitherProduct.isLeft shouldBe true
+        eitherProduct match {
+          case Left(_: NoSuchElementException) => true
+          case _ => fail()
+        }
+      }
+    }
+
+    "creating a Product from invalid products raw csv line (one property missing)" should {
+      "return a failure" in {
+        val invalidProductsRaw = List(
+          List("veloshop", "chain-01", "4"),
+          List("buyer1", "chain-01", "4"),
+          List("buyer1", "veloshop", "4"),
+          List("buyer1", "veloshop", "chain-01")
+        )
+        invalidProductsRaw.map { invalidProductRaw =>
+          val eitherProduct = ProductCSVParser.getProductFromCsvLine(invalidProductRaw)
+          eitherProduct.isLeft shouldBe true
+          eitherProduct match {
+            case Left(_: IndexOutOfBoundsException) => true
+            case _ => fail()
+          }
         }
       }
     }
