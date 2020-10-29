@@ -2,16 +2,12 @@ package services
 
 import com.google.inject.Inject
 import csvparser.{IProductParser, ProductCSVParser}
-import io.circe.generic.auto._
-import io.circe.syntax.EncoderOps
 import models.{Product, ProductValidator, ProductsRatingsSummary}
 
 trait IProductsService {
   def getProducts(productsRaw: List[List[String]]): Seq[Either[Object, Product]]
 
   def getProductsRatingsSummary: Either[Throwable, ProductsRatingsSummary]
-
-  def getProductsRatingsSummaryAsJson(productsRatingsSummary: ProductsRatingsSummary): String
 }
 
 class ProductsService @Inject()(productParser: IProductParser) extends IProductsService {
@@ -58,9 +54,5 @@ class ProductsService @Inject()(productParser: IProductParser) extends IProducts
       val productEither = ProductCSVParser.getProductFromCsvLine(productLine)
       productEither.flatMap(product => ProductValidator.validateProduct(product.buyerId, product.shopId, product.productId, product.rating))
     }
-  }
-
-  override def getProductsRatingsSummaryAsJson(productsRatingsSummary: ProductsRatingsSummary): String = {
-    productsRatingsSummary.asJson.toString()
   }
 }
