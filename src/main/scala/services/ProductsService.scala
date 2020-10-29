@@ -14,7 +14,7 @@ trait IProductsService {
 
 class ProductsService @Inject()(productParser: IProductParser) extends IProductsService {
   override def getRawProducts: List[List[String]] = {
-    productParser.readAllProducts()
+    productParser.readAllProducts().getOrElse(List.empty)
   }
 
   override def getProductsRatingsSummary(productsRaw: List[List[String]]): ProductsRatingsSummary = {

@@ -20,5 +20,6 @@ lazy val root = (project in file("."))
       "com.typesafe" % "config" % "1.4.1",
       "net.codingwell" %% "scala-guice" % "4.2.11",
       "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2",
+      "org.scalatestplus" %% "mockito-3-4" % "3.2.2.0" % "test",
       scalaTest % Test)
   )
