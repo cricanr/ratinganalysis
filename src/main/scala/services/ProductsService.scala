@@ -7,13 +7,13 @@ import models.{Product, ProductValidator, ProductsRatingsSummary}
 trait IProductsService {
   def getProducts(productsRaw: List[List[String]]): Seq[Either[Object, Product]]
 
-  def getProductsRatingsSummary: Either[Throwable, ProductsRatingsSummary]
+  def getProductsRatingsSummary(csvFilePath: String): Either[Throwable, ProductsRatingsSummary]
 }
 
 class ProductsService @Inject()(productParser: IProductParser) extends IProductsService {
 
-  override def getProductsRatingsSummary: Either[Throwable, ProductsRatingsSummary] = {
-    val eitherProductsRaw = productParser.readAllProducts()
+  override def getProductsRatingsSummary(csvFilePath: String): Either[Throwable, ProductsRatingsSummary] = {
+    val eitherProductsRaw = productParser.readAllProducts(csvFilePath)
     eitherProductsRaw.map { productsRaw =>
       val eitherProducts = getProducts(productsRaw)
       ProductsService.getProductRatingSummary(eitherProducts)

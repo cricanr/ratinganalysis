@@ -18,7 +18,7 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
           List("buyer2", "veloshop", "chain-02", "2"),
           List("buyer3", "veloshop3", "chain-04", "3")
         )
-        when(productsParserMock.readAllProducts()).thenReturn(Right(productsRaw))
+        when(productsParserMock.readAllProducts("/somePath")).thenReturn(Right(productsRaw))
         val productsService = new ProductsService(productsParserMock)
 
         productsService.getProducts(productsRaw) shouldBe List(
@@ -34,7 +34,7 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
         val productsParserMock = mock[IProductParser]
         val productsRaw = List.empty
 
-        when(productsParserMock.readAllProducts()).thenReturn(Right(productsRaw))
+        when(productsParserMock.readAllProducts("/somePath")).thenReturn(Right(productsRaw))
         val productsService = new ProductsService(productsParserMock)
 
         productsService.getProducts(productsRaw) shouldBe List.empty
@@ -49,7 +49,7 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
           List("buyer2", "veloshop", "chain-02", "2"),
           List("buyer3", "veloshop3", "chain-04", "3")
         )
-        when(productsParserMock.readAllProducts()).thenReturn(Right(productsRaw))
+        when(productsParserMock.readAllProducts("/somePath")).thenReturn(Right(productsRaw))
         val productsService = new ProductsService(productsParserMock)
 
         val productsEither = productsService.getProducts(productsRaw)
@@ -72,7 +72,7 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
           List("buyer4", "veloshop4", "chain-04", "10"),
           List("1buyer5", "2veloshop4", "3chain-04", "109")
         )
-        when(productsParserMock.readAllProducts()).thenReturn(Right(productsRaw))
+        when(productsParserMock.readAllProducts("/somePath")).thenReturn(Right(productsRaw))
         val productsService = new ProductsService(productsParserMock)
 
         val productsEither = productsService.getProducts(productsRaw)
@@ -245,10 +245,10 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
         ))
 
         val productCSVParserMock = mock[IProductParser]
-        when(productCSVParserMock.readAllProducts()).thenReturn(productsRaw)
+        when(productCSVParserMock.readAllProducts("/somePath")).thenReturn(productsRaw)
         val productsService = new ProductsService(productCSVParserMock)
 
-        val eitherSummary = productsService.getProductsRatingsSummary
+        val eitherSummary = productsService.getProductsRatingsSummary("/somePath")
 
         eitherSummary.isRight shouldBe true
         eitherSummary.foreach { summary =>
@@ -272,10 +272,10 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
         ))
 
         val productCSVParserMock = mock[IProductParser]
-        when(productCSVParserMock.readAllProducts()).thenReturn(Left(new FileNotFoundException("file not found")))
+        when(productCSVParserMock.readAllProducts("/somePath")).thenReturn(Left(new FileNotFoundException("file not found")))
         val productsService = new ProductsService(productCSVParserMock)
 
-        val eitherSummary = productsService.getProductsRatingsSummary
+        val eitherSummary = productsService.getProductsRatingsSummary("/somePath")
 
         eitherSummary.isLeft shouldBe true
         eitherSummary match {
