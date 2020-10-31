@@ -102,5 +102,67 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
         summary.lessRatedProducts shouldBe List("chain-03", "chain-04", "chain-02")
       }
     }
+
+    "calling getProductRatingSummary on valid input with just 3 products" should {
+      "return the summary" in {
+        val summary = ProductsService.getProductRatingSummary(Seq(
+          Right(Product("buyer1", "veloshop", "chain-01", 4)),
+          Right(Product("buyer2", "veloshop", "chain-02", 2)),
+          Right(Product("buyer4", "veloshop", "chain-03", 1))
+        ))
+
+        summary.validLines shouldBe 3
+        summary.invalidLines shouldBe 0
+        summary.bestRatedProducts shouldBe List("chain-01", "chain-02", "chain-03")
+        summary.worstRatedProducts shouldBe List("chain-03", "chain-02", "chain-01")
+        summary.mostRatedProducts shouldBe List("chain-02", "chain-01", "chain-03")
+        summary.lessRatedProducts shouldBe List("chain-03", "chain-01", "chain-02")
+      }
+    }
+
+    "calling getProductRatingSummary on valid input with just 2 products, 1 with 2 ratings" should {
+      "return the summary" in {
+        val summary = ProductsService.getProductRatingSummary(Seq(
+          Right(Product("buyer1", "veloshop", "chain-01", 4)),
+          Right(Product("buyer2", "veloshop", "chain-01", 2)),
+          Right(Product("buyer4", "veloshop", "chain-03", 1))
+        ))
+
+        summary.validLines shouldBe 3
+        summary.invalidLines shouldBe 0
+        summary.bestRatedProducts shouldBe List("chain-01", "chain-03")
+        summary.worstRatedProducts shouldBe List("chain-03", "chain-01")
+        summary.mostRatedProducts shouldBe List("chain-01", "chain-03")
+        summary.lessRatedProducts shouldBe List("chain-03", "chain-01")
+      }
+    }
+
+    "calling getProductRatingSummary on valid input with no products" should {
+      "return the summary" in {
+        val summary = ProductsService.getProductRatingSummary(Seq.empty)
+
+        summary.validLines shouldBe 0
+        summary.invalidLines shouldBe 0
+        summary.bestRatedProducts shouldBe List.empty
+        summary.worstRatedProducts shouldBe List.empty
+        summary.mostRatedProducts shouldBe List.empty
+        summary.lessRatedProducts shouldBe List.empty
+      }
+    }
+
+    "calling getProductRatingSummary on valid input with 1 product" should {
+      "return the summary" in {
+        val summary = ProductsService.getProductRatingSummary(Seq(
+          Right(Product("buyer1", "veloshop", "chain-01", 4))
+        ))
+
+        summary.validLines shouldBe 1
+        summary.invalidLines shouldBe 0
+        summary.bestRatedProducts shouldBe List("chain-01")
+        summary.worstRatedProducts shouldBe List("chain-01")
+        summary.mostRatedProducts shouldBe List("chain-01")
+        summary.lessRatedProducts shouldBe List("chain-01")
+      }
+    }
   }
 }
