@@ -1,5 +1,7 @@
 package services
 
+import java.io.FileNotFoundException
+
 import csvparser.IProductParser
 import models._
 import org.mockito.Mockito.when
@@ -230,6 +232,56 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
         summary.worstRatedProducts shouldBe List("patagonia-01", "endura-01", "kors-01")
         summary.mostRatedProducts shouldBe List("lights-02", "smarttv-01", "kors-01")
         summary.lessRatedProducts shouldBe List("lights-01", "endura-01", "guess-01")
+      }
+    }
+
+    "calling getProductsRatingsSummary on valid csv content" should {
+      "return the summary" in {
+        val productsRaw = Right(List(
+          List("buyer1", "veloshop", "chain-01", "4"),
+          List("buyer1", "veloshop", "lights-02", "5"),
+          List("buyer1", "veloshop", "lights-01", "5"),
+          List("buyer1", "veloshop", "saddle-01", "3")
+        ))
+
+        val productCSVParserMock = mock[IProductParser]
+        when(productCSVParserMock.readAllProducts()).thenReturn(productsRaw)
+        val productsService = new ProductsService(productCSVParserMock)
+
+        val eitherSummary = productsService.getProductsRatingsSummary
+
+        eitherSummary.isRight shouldBe true
+        eitherSummary.foreach { summary =>
+          summary.validLines shouldBe 4
+          summary.invalidLines shouldBe 0
+          summary.bestRatedProducts shouldBe List("lights-02", "lights-01", "chain-01")
+          summary.worstRatedProducts shouldBe List("saddle-01", "chain-01", "lights-01")
+          summary.mostRatedProducts shouldBe List("lights-02", "saddle-01", "chain-01")
+          summary.lessRatedProducts shouldBe List("lights-01", "chain-01", "saddle-01")
+        }
+      }
+    }
+
+    "calling getProductsRatingsSummary on invalid csv content" should {
+      "return the summary" in {
+        val productsRaw = Right(List(
+          List("buyer1", "veloshop", "chain-01", "4"),
+          List("buyer1", "veloshop", "lights-02", "5"),
+          List("buyer1", "veloshop", "lights-01", "5"),
+          List("buyer1", "veloshop", "saddle-01", "3")
+        ))
+
+        val productCSVParserMock = mock[IProductParser]
+        when(productCSVParserMock.readAllProducts()).thenReturn(Left(new FileNotFoundException("file not found")))
+        val productsService = new ProductsService(productCSVParserMock)
+
+        val eitherSummary = productsService.getProductsRatingsSummary
+
+        eitherSummary.isLeft shouldBe true
+        eitherSummary match {
+          case Left(_: FileNotFoundException) => true
+          case _ => fail()
+        }
       }
     }
   }
