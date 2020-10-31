@@ -1,13 +1,12 @@
 package main
 
 import com.google.inject.Guice
-import com.typesafe.scalalogging.LazyLogging
 import models.ProductsRatingsSummary
 import modules.Module
 import net.codingwell.scalaguice.InjectorExtensions._
 import services.IProductsService
 
-object ProductsRatingsMain extends App with LazyLogging {
+object ProductsRatingsMain extends App {
   private def getProductsService: IProductsService = {
     val injector = Guice.createInjector(new Module())
     injector.instance[IProductsService]
