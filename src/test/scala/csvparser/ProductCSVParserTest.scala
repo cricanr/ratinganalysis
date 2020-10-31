@@ -2,9 +2,7 @@ package csvparser
 
 import java.io.FileNotFoundException
 
-import com.typesafe.config.Config
 import models.Product
-import org.mockito.Mockito.when
 import org.scalatest.{Matchers, WordSpec}
 import org.scalatestplus.mockito.MockitoSugar
 
@@ -12,11 +10,10 @@ class ProductCSVParserTest extends WordSpec with Matchers with MockitoSugar {
   "The Product CSV Parser" when {
     "reading all file lines for a valid file" should {
       "return the product lines parsed" in {
-        implicit val configMock: Config = mock[Config]
-        when(configMock.getString("csvFilePath")).thenReturn("src/test/resources/validRatings.csv")
+        val csvFilePath = "src/test/resources/validRatings.csv"
 
-        val productCSVParser = new ProductCSVParser()
-        val productsRaw = productCSVParser.readAllProducts()
+        val productCSVParser = new ProductCSVParser
+        val productsRaw = productCSVParser.readAllProducts(csvFilePath)
 
         productsRaw shouldBe Right(List(
           List("buyer1", "veloshop", "chain-01", "4"),
@@ -29,11 +26,10 @@ class ProductCSVParserTest extends WordSpec with Matchers with MockitoSugar {
 
     "reading all file lines for a valid empty file with headers only" should {
       "return an empty parsed list" in {
-        implicit val configMock: Config = mock[Config]
-        when(configMock.getString("csvFilePath")).thenReturn("src/test/resources/emptyRatingsWithHeaders.csv")
+        val csvFilePath = "src/test/resources/emptyRatingsWithHeaders.csv"
 
-        val productCSVParser = new ProductCSVParser()
-        val productsRaw = productCSVParser.readAllProducts()
+        val productCSVParser = new ProductCSVParser
+        val productsRaw = productCSVParser.readAllProducts(csvFilePath)
 
         productsRaw shouldBe Right(List.empty)
       }
@@ -41,11 +37,10 @@ class ProductCSVParserTest extends WordSpec with Matchers with MockitoSugar {
 
     "reading all file lines for a valid empty file without headers" should {
       "return an empty parsed list" in {
-        implicit val configMock: Config = mock[Config]
-        when(configMock.getString("csvFilePath")).thenReturn("src/test/resources/emptyRatingsWithoutHeaders.csv")
+        val csvFilePath = "src/test/resources/emptyRatingsWithoutHeaders.csv"
 
-        val productCSVParser = new ProductCSVParser()
-        val productsRaw = productCSVParser.readAllProducts()
+        val productCSVParser = new ProductCSVParser
+        val productsRaw = productCSVParser.readAllProducts(csvFilePath)
 
         productsRaw shouldBe Right(List.empty)
       }
@@ -53,10 +48,9 @@ class ProductCSVParserTest extends WordSpec with Matchers with MockitoSugar {
 
     "reading all file lines for an invalid file" should {
       "return a failure" in {
-        implicit val configMock: Config = mock[Config]
-        when(configMock.getString("csvFilePath")).thenReturn("src/test/resources/noneExisting.csv")
-        val productCSVParser = new ProductCSVParser()
-        val eitherProductCSVParser = productCSVParser.readAllProducts()
+        val csvFilePath = "src/test/resources/noneExisting.csv"
+        val productCSVParser = new ProductCSVParser
+        val eitherProductCSVParser = productCSVParser.readAllProducts(csvFilePath)
         eitherProductCSVParser.isLeft shouldBe true
         eitherProductCSVParser match {
           case Left(_: FileNotFoundException) => true
