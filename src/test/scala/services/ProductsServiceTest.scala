@@ -164,5 +164,24 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
         summary.lessRatedProducts shouldBe List("chain-01")
       }
     }
+
+    "calling getProductRatingSummary on invalid input" should {
+      "return the summary without considering the invalid product" in {
+        val summary = ProductsService.getProductRatingSummary(Seq(
+          Right(Product("buyer1", "veloshop", "chain-01", 4)),
+          Right(Product("buyer1", "veloshop", "chain-01", 4)),
+          Right(Product("buyer2", "veloshop", "chain-02", 2)),
+          Left(Product("1buyer3", "veloshop3", "chain-04", 5)),
+          Right(Product("buyer4", "veloshop", "chain-03", 1)),
+        ))
+
+        summary.validLines shouldBe 4
+        summary.invalidLines shouldBe 1
+        summary.bestRatedProducts shouldBe List("chain-01", "chain-02", "chain-03")
+        summary.worstRatedProducts shouldBe List("chain-03", "chain-02", "chain-01")
+        summary.mostRatedProducts shouldBe List("chain-01", "chain-02", "chain-03")
+        summary.lessRatedProducts shouldBe List("chain-03", "chain-02", "chain-01")
+      }
+    }
   }
 }
