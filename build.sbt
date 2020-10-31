@@ -1,9 +1,11 @@
+enablePlugins(JavaAppPackaging)
+
 import Dependencies._
 
 ThisBuild / scalaVersion     := "2.13.3"
 ThisBuild / version          := "0.1.0-SNAPSHOT"
-ThisBuild / organization     := "com.example"
-ThisBuild / organizationName := "example"
+ThisBuild / organization     := "com.cricanr"
+ThisBuild / organizationName := "playground"
 
 val circeVersion = "0.13.0"
 
@@ -23,3 +25,5 @@ lazy val root = (project in file("."))
       "org.scalatestplus" %% "mockito-3-4" % "3.2.2.0" % "test",
       scalaTest % Test)
   )
+
+mappings in Universal += file("src/main/resources/ratings.csv") -> "/src/main/resources/ratings.csv"
