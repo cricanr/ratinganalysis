@@ -18,13 +18,14 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
           List("buyer2", "veloshop", "chain-02", "2"),
           List("buyer3", "veloshop3", "chain-04", "3")
         )
-        when(productsParserMock.readAllProducts("/somePath")).thenReturn(Right(productsRaw))
+        when(productsParserMock.readAllProducts("/somePath"))
+          .thenReturn(Right(productsRaw))
         val productsService = new ProductsService(productsParserMock)
 
         productsService.getProducts(productsRaw) shouldBe List(
           Right(Product("buyer1", "veloshop", "chain-01", 4)),
           Right(Product("buyer2", "veloshop", "chain-02", 2)),
-          Right(Product("buyer3", "veloshop3", "chain-04", 3)),
+          Right(Product("buyer3", "veloshop3", "chain-04", 3))
         )
       }
     }
@@ -34,7 +35,8 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
         val productsParserMock = mock[IProductParser]
         val productsRaw = List.empty
 
-        when(productsParserMock.readAllProducts("/somePath")).thenReturn(Right(productsRaw))
+        when(productsParserMock.readAllProducts("/somePath"))
+          .thenReturn(Right(productsRaw))
         val productsService = new ProductsService(productsParserMock)
 
         productsService.getProducts(productsRaw) shouldBe List.empty
@@ -49,7 +51,8 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
           List("buyer2", "veloshop", "chain-02", "2"),
           List("buyer3", "veloshop3", "chain-04", "3")
         )
-        when(productsParserMock.readAllProducts("/somePath")).thenReturn(Right(productsRaw))
+        when(productsParserMock.readAllProducts("/somePath"))
+          .thenReturn(Right(productsRaw))
         val productsService = new ProductsService(productsParserMock)
 
         val productsEither = productsService.getProducts(productsRaw)
@@ -58,7 +61,9 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
           Right(Product("buyer3", "veloshop3", "chain-04", 3))
         )
 
-        productsEither.collect { case Left(failure: IndexOutOfBoundsException) => failure }.size shouldBe 1
+        productsEither.collect {
+          case Left(failure: IndexOutOfBoundsException) => failure
+        }.size shouldBe 1
       }
     }
 
@@ -72,7 +77,8 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
           List("buyer4", "veloshop4", "chain-04", "10"),
           List("1buyer5", "2veloshop4", "3chain-04", "109")
         )
-        when(productsParserMock.readAllProducts("/somePath")).thenReturn(Right(productsRaw))
+        when(productsParserMock.readAllProducts("/somePath"))
+          .thenReturn(Right(productsRaw))
         val productsService = new ProductsService(productsParserMock)
 
         val productsEither = productsService.getProducts(productsRaw)
@@ -88,18 +94,28 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
 
     "calling getProductRatingSummary on valid input" should {
       "return the summary" in {
-        val summary = ProductsService.getProductRatingSummary(Seq(
-          Right(Product("buyer1", "veloshop", "chain-01", 4)),
-          Right(Product("buyer1", "veloshop", "chain-01", 4)),
-          Right(Product("buyer2", "veloshop", "chain-02", 2)),
-          Right(Product("buyer3", "veloshop3", "chain-04", 5)),
-          Right(Product("buyer4", "veloshop", "chain-03", 1)),
-        ))
+        val summary = ProductsService.getProductRatingSummary(
+          Seq(
+            Right(Product("buyer1", "veloshop", "chain-01", 4)),
+            Right(Product("buyer1", "veloshop", "chain-01", 4)),
+            Right(Product("buyer2", "veloshop", "chain-02", 2)),
+            Right(Product("buyer3", "veloshop3", "chain-04", 5)),
+            Right(Product("buyer4", "veloshop", "chain-03", 1))
+          )
+        )
 
         summary.validLines shouldBe 5
         summary.invalidLines shouldBe 0
-        summary.bestRatedProducts shouldBe List("chain-04", "chain-01", "chain-02")
-        summary.worstRatedProducts shouldBe List("chain-03", "chain-02", "chain-01")
+        summary.bestRatedProducts shouldBe List(
+          "chain-04",
+          "chain-01",
+          "chain-02"
+        )
+        summary.worstRatedProducts shouldBe List(
+          "chain-03",
+          "chain-02",
+          "chain-01"
+        )
         summary.mostRatedProduct shouldBe "chain-01"
         summary.lessRatedProduct shouldBe "chain-03"
       }
@@ -107,16 +123,26 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
 
     "calling getProductRatingSummary on valid input with just 3 products" should {
       "return the summary" in {
-        val summary = ProductsService.getProductRatingSummary(Seq(
-          Right(Product("buyer1", "veloshop", "chain-01", 4)),
-          Right(Product("buyer2", "veloshop", "chain-02", 2)),
-          Right(Product("buyer4", "veloshop", "chain-03", 1))
-        ))
+        val summary = ProductsService.getProductRatingSummary(
+          Seq(
+            Right(Product("buyer1", "veloshop", "chain-01", 4)),
+            Right(Product("buyer2", "veloshop", "chain-02", 2)),
+            Right(Product("buyer4", "veloshop", "chain-03", 1))
+          )
+        )
 
         summary.validLines shouldBe 3
         summary.invalidLines shouldBe 0
-        summary.bestRatedProducts shouldBe List("chain-01", "chain-02", "chain-03")
-        summary.worstRatedProducts shouldBe List("chain-03", "chain-02", "chain-01")
+        summary.bestRatedProducts shouldBe List(
+          "chain-01",
+          "chain-02",
+          "chain-03"
+        )
+        summary.worstRatedProducts shouldBe List(
+          "chain-03",
+          "chain-02",
+          "chain-01"
+        )
         summary.mostRatedProduct shouldBe "chain-02"
         summary.lessRatedProduct shouldBe "chain-03"
       }
@@ -124,11 +150,13 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
 
     "calling getProductRatingSummary on valid input with just 2 products, 1 with 2 ratings" should {
       "return the summary" in {
-        val summary = ProductsService.getProductRatingSummary(Seq(
-          Right(Product("buyer1", "veloshop", "chain-01", 4)),
-          Right(Product("buyer2", "veloshop", "chain-01", 2)),
-          Right(Product("buyer4", "veloshop", "chain-03", 1))
-        ))
+        val summary = ProductsService.getProductRatingSummary(
+          Seq(
+            Right(Product("buyer1", "veloshop", "chain-01", 4)),
+            Right(Product("buyer2", "veloshop", "chain-01", 2)),
+            Right(Product("buyer4", "veloshop", "chain-03", 1))
+          )
+        )
 
         summary.validLines shouldBe 3
         summary.invalidLines shouldBe 0
@@ -154,9 +182,11 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
 
     "calling getProductRatingSummary on valid input with 1 product" should {
       "return the summary" in {
-        val summary = ProductsService.getProductRatingSummary(Seq(
-          Right(Product("buyer1", "veloshop", "chain-01", 4))
-        ))
+        val summary = ProductsService.getProductRatingSummary(
+          Seq(
+            Right(Product("buyer1", "veloshop", "chain-01", 4))
+          )
+        )
 
         summary.validLines shouldBe 1
         summary.invalidLines shouldBe 0
@@ -169,18 +199,28 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
 
     "calling getProductRatingSummary on invalid input" should {
       "return the summary without considering the invalid product" in {
-        val summary = ProductsService.getProductRatingSummary(Seq(
-          Right(Product("buyer1", "veloshop", "chain-01", 4)),
-          Right(Product("buyer1", "veloshop", "chain-01", 4)),
-          Right(Product("buyer2", "veloshop", "chain-02", 2)),
-          Left(Product("1buyer3", "veloshop3", "chain-04", 5)),
-          Right(Product("buyer4", "veloshop", "chain-03", 1)),
-        ))
+        val summary = ProductsService.getProductRatingSummary(
+          Seq(
+            Right(Product("buyer1", "veloshop", "chain-01", 4)),
+            Right(Product("buyer1", "veloshop", "chain-01", 4)),
+            Right(Product("buyer2", "veloshop", "chain-02", 2)),
+            Left(Product("1buyer3", "veloshop3", "chain-04", 5)),
+            Right(Product("buyer4", "veloshop", "chain-03", 1))
+          )
+        )
 
         summary.validLines shouldBe 4
         summary.invalidLines shouldBe 1
-        summary.bestRatedProducts shouldBe List("chain-01", "chain-02", "chain-03")
-        summary.worstRatedProducts shouldBe List("chain-03", "chain-02", "chain-01")
+        summary.bestRatedProducts shouldBe List(
+          "chain-01",
+          "chain-02",
+          "chain-03"
+        )
+        summary.worstRatedProducts shouldBe List(
+          "chain-03",
+          "chain-02",
+          "chain-01"
+        )
         summary.mostRatedProduct shouldBe "chain-01"
         summary.lessRatedProduct shouldBe "chain-03"
       }
@@ -188,13 +228,15 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
 
     "calling getProductRatingSummary on just invalid input" should {
       "return the empty summary" in {
-        val summary = ProductsService.getProductRatingSummary(Seq(
-          Left(Product("buyer1", "veloshop", "chain-01", 4)),
-          Left(Product("buyer1", "veloshop", "chain-01", 4)),
-          Left(Product("buyer2", "veloshop", "chain-02", 2)),
-          Left(Product("1buyer3", "veloshop3", "chain-04", 5)),
-          Left(Product("buyer4", "veloshop", "chain-03", 1)),
-        ))
+        val summary = ProductsService.getProductRatingSummary(
+          Seq(
+            Left(Product("buyer1", "veloshop", "chain-01", 4)),
+            Left(Product("buyer1", "veloshop", "chain-01", 4)),
+            Left(Product("buyer2", "veloshop", "chain-02", 2)),
+            Left(Product("1buyer3", "veloshop3", "chain-04", 5)),
+            Left(Product("buyer4", "veloshop", "chain-03", 1))
+          )
+        )
 
         summary.validLines shouldBe 0
         summary.invalidLines shouldBe 5
@@ -228,8 +270,16 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
 
         summary.validLines shouldBe 13
         summary.invalidLines shouldBe 1
-        summary.bestRatedProducts shouldBe List("lights-02", "pandora-01", "lights-01")
-        summary.worstRatedProducts shouldBe List("patagonia-01", "endura-01", "kors-01")
+        summary.bestRatedProducts shouldBe List(
+          "lights-02",
+          "pandora-01",
+          "lights-01"
+        )
+        summary.worstRatedProducts shouldBe List(
+          "patagonia-01",
+          "endura-01",
+          "kors-01"
+        )
         summary.mostRatedProduct shouldBe "lights-02"
         summary.lessRatedProduct shouldBe "lights-01"
       }
@@ -237,25 +287,37 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
 
     "calling getProductsRatingsSummary on valid csv content" should {
       "return the summary" in {
-        val productsRaw = Right(List(
-          List("buyer1", "veloshop", "chain-01", "4"),
-          List("buyer1", "veloshop", "lights-02", "5"),
-          List("buyer1", "veloshop", "lights-01", "5"),
-          List("buyer1", "veloshop", "saddle-01", "3")
-        ))
+        val productsRaw = Right(
+          List(
+            List("buyer1", "veloshop", "chain-01", "4"),
+            List("buyer1", "veloshop", "lights-02", "5"),
+            List("buyer1", "veloshop", "lights-01", "5"),
+            List("buyer1", "veloshop", "saddle-01", "3")
+          )
+        )
 
         val productCSVParserMock = mock[IProductParser]
-        when(productCSVParserMock.readAllProducts("/somePath")).thenReturn(productsRaw)
+        when(productCSVParserMock.readAllProducts("/somePath"))
+          .thenReturn(productsRaw)
         val productsService = new ProductsService(productCSVParserMock)
 
-        val eitherSummary = productsService.getProductsRatingsSummary("/somePath")
+        val eitherSummary =
+          productsService.getProductsRatingsSummary("/somePath")
 
         eitherSummary.isRight shouldBe true
         eitherSummary.foreach { summary =>
           summary.validLines shouldBe 4
           summary.invalidLines shouldBe 0
-          summary.bestRatedProducts shouldBe List("lights-02", "lights-01", "chain-01")
-          summary.worstRatedProducts shouldBe List("saddle-01", "chain-01", "lights-01")
+          summary.bestRatedProducts shouldBe List(
+            "lights-02",
+            "lights-01",
+            "chain-01"
+          )
+          summary.worstRatedProducts shouldBe List(
+            "saddle-01",
+            "chain-01",
+            "lights-01"
+          )
           summary.mostRatedProduct shouldBe "lights-02"
           summary.lessRatedProduct shouldBe "lights-01"
         }
@@ -264,23 +326,27 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
 
     "calling getProductsRatingsSummary on invalid csv content" should {
       "return the summary" in {
-        val productsRaw = Right(List(
-          List("buyer1", "veloshop", "chain-01", "4"),
-          List("buyer1", "veloshop", "lights-02", "5"),
-          List("buyer1", "veloshop", "lights-01", "5"),
-          List("buyer1", "veloshop", "saddle-01", "3")
-        ))
+        val productsRaw = Right(
+          List(
+            List("buyer1", "veloshop", "chain-01", "4"),
+            List("buyer1", "veloshop", "lights-02", "5"),
+            List("buyer1", "veloshop", "lights-01", "5"),
+            List("buyer1", "veloshop", "saddle-01", "3")
+          )
+        )
 
         val productCSVParserMock = mock[IProductParser]
-        when(productCSVParserMock.readAllProducts("/somePath")).thenReturn(Left(new FileNotFoundException("file not found")))
+        when(productCSVParserMock.readAllProducts("/somePath"))
+          .thenReturn(Left(new FileNotFoundException("file not found")))
         val productsService = new ProductsService(productCSVParserMock)
 
-        val eitherSummary = productsService.getProductsRatingsSummary("/somePath")
+        val eitherSummary =
+          productsService.getProductsRatingsSummary("/somePath")
 
         eitherSummary.isLeft shouldBe true
         eitherSummary match {
           case Left(_: FileNotFoundException) => true
-          case _ => fail()
+          case _                              => fail()
         }
       }
     }

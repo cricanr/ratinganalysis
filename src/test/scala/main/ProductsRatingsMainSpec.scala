@@ -6,7 +6,8 @@ class ProductsRatingsMainSpec extends WordSpec with Matchers {
   "The ProductsRatingsMainSpec" when {
     "calling calculate on a valid csv file path" should {
       "return the products ratings summary in JSON format" in {
-        val productsRatingsSummaryAsJson = ProductsRatingsMain.calculate("src/test/resources/validRatings.csv")
+        val productsRatingsSummaryAsJson =
+          ProductsRatingsMain.calculate("src/test/resources/validRatings.csv")
         productsRatingsSummaryAsJson shouldBe
           """{
             |  "validLines" : 4,
@@ -31,7 +32,8 @@ class ProductsRatingsMainSpec extends WordSpec with Matchers {
 
   "calling calculate on an invalid csv file path" should {
     "return an error message" in {
-      val productsRatingsSummaryAsJson = ProductsRatingsMain.calculate("/invalid.csv")
+      val productsRatingsSummaryAsJson =
+        ProductsRatingsMain.calculate("/invalid.csv")
       productsRatingsSummaryAsJson shouldBe
         """We could not calculate a products ratings summary for the given csv file, an error occurred,details: FileNotFoundException: /invalid.csv (No such file or directory)""".stripMargin
 

@@ -9,7 +9,9 @@ import models.Product
 import scala.util.Try
 
 trait IProductParser {
-  def readAllProducts(csvFilePath: String): Either[Throwable, List[List[String]]]
+  def readAllProducts(
+      csvFilePath: String
+  ): Either[Throwable, List[List[String]]]
 }
 
 class ProductCSVParser @Inject() extends IProductParser {
@@ -19,16 +21,25 @@ class ProductCSVParser @Inject() extends IProductParser {
     }.toEither
   }
 
-  def readAllProducts(csvFilePath: String): Either[Throwable, List[List[String]]] = {
+  def readAllProducts(
+      csvFilePath: String
+  ): Either[Throwable, List[List[String]]] = {
     val reader = getReader(csvFilePath)
     reader.map(readerCsv => readerCsv.all().drop(1))
   }
 }
 
 object ProductCSVParser {
-  def getProductFromCsvLine(productCsvLine: List[String]): Either[Throwable, Product] = {
+  def getProductFromCsvLine(
+      productCsvLine: List[String]
+  ): Either[Throwable, Product] = {
     Try {
-      Product(productCsvLine.head, productCsvLine(1), productCsvLine(2), productCsvLine(3).toInt)
+      Product(
+        productCsvLine.head,
+        productCsvLine(1),
+        productCsvLine(2),
+        productCsvLine(3).toInt
+      )
     }.toEither
   }
 }

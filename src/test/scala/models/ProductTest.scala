@@ -8,15 +8,28 @@ class ProductTest extends WordSpec with Matchers {
   "The Product" when {
     "given valid parameters" should {
       "be valid" in {
-        val validatedProduct = ProductValidator.validateProduct(buyerId = "buyer1",shopId = "shop1", productId = "smart-tv-01", rating = 4)
+        val validatedProduct = ProductValidator.validateProduct(
+          buyerId = "buyer1",
+          shopId = "shop1",
+          productId = "smart-tv-01",
+          rating = 4
+        )
         validatedProduct.isRight shouldBe true
-        validatedProduct.map(prod => prod shouldBe Product(buyerId = "buyer1", shopId = "shop1", productId = "smart-tv-01", rating = 4))
+        validatedProduct.map(prod =>
+          prod shouldBe Product(
+            buyerId = "buyer1",
+            shopId = "shop1",
+            productId = "smart-tv-01",
+            rating = 4
+          )
+        )
       }
     }
 
     "given some invalid parameter buyerId" should {
       "be invalid" in {
-        val validatedProduct = ProductValidator.validateProduct("2buyer","shop1", "smart-tv-01", 4)
+        val validatedProduct =
+          ProductValidator.validateProduct("2buyer", "shop1", "smart-tv-01", 4)
         validatedProduct.isLeft shouldBe true
         validatedProduct.map(prod => prod shouldBe BuyerIdInvalid)
       }
@@ -24,7 +37,12 @@ class ProductTest extends WordSpec with Matchers {
 
     "given some invalid parameter shopId" should {
       "be invalid" in {
-        val validatedProduct = ProductValidator.validateProduct("buyer1","1shop12", "smart-tv-01", 4)
+        val validatedProduct = ProductValidator.validateProduct(
+          "buyer1",
+          "1shop12",
+          "smart-tv-01",
+          4
+        )
         validatedProduct.isLeft shouldBe true
         validatedProduct.map(prod => prod shouldBe ShopIdInvalid)
       }
@@ -32,7 +50,12 @@ class ProductTest extends WordSpec with Matchers {
 
     "given some invalid parameter productId" should {
       "be invalid" in {
-        val validatedProduct = ProductValidator.validateProduct("buyer1","shop12", "smart[-tv-01", 4)
+        val validatedProduct = ProductValidator.validateProduct(
+          "buyer1",
+          "shop12",
+          "smart[-tv-01",
+          4
+        )
         validatedProduct.isLeft shouldBe true
         validatedProduct.map(prod => prod shouldBe ProductIdInvalid)
       }
@@ -40,7 +63,8 @@ class ProductTest extends WordSpec with Matchers {
 
     "given some invalid parameter rating" should {
       "be invalid" in {
-        val validatedProduct = ProductValidator.validateProduct("buyer1","shop12", "smart-tv-01", 6)
+        val validatedProduct =
+          ProductValidator.validateProduct("buyer1", "shop12", "smart-tv-01", 6)
         validatedProduct.isLeft shouldBe true
         validatedProduct.map(prod => prod shouldBe RatingInvalid)
       }
@@ -48,7 +72,12 @@ class ProductTest extends WordSpec with Matchers {
 
     "given all invalid parameters" should {
       "be invalid" in {
-        val validatedProduct = ProductValidator.validateProduct("1buyer1","1shop12", "1smart-tv-01", 6)
+        val validatedProduct = ProductValidator.validateProduct(
+          "1buyer1",
+          "1shop12",
+          "1smart-tv-01",
+          6
+        )
         validatedProduct.isLeft shouldBe true
         validatedProduct.map(prod => prod shouldBe BuyerIdInvalid)
         validatedProduct.map(prod => prod shouldBe ShopIdInvalid)
@@ -124,7 +153,9 @@ class ProductTest extends WordSpec with Matchers {
 
   "given valid `Rating` values" should {
     "return a validation success" in {
-      for ( i <- 1 to 5) { ProductValidator.validateRating(i).map { rating => rating shouldBe i } }
+      for (i <- 1 to 5) {
+        ProductValidator.validateRating(i).map { rating => rating shouldBe i }
+      }
     }
   }
 
@@ -134,7 +165,7 @@ class ProductTest extends WordSpec with Matchers {
       invalidValues.foreach { i =>
         ProductValidator.validateRating(i) match {
           case Left(invalid) => invalid shouldBe RatingInvalid
-          case _ => fail()
+          case _             => fail()
         }
       }
     }
@@ -144,17 +175,27 @@ class ProductTest extends WordSpec with Matchers {
     "return a validation success" in {
       val validProductIds = Seq("smart-tv-01", "patagonia-32", "northface-99")
       validProductIds.foreach { productId =>
-        ProductValidator.validateProductId(productId).map { id => id shouldBe productId } }
+        ProductValidator.validateProductId(productId).map { id =>
+          id shouldBe productId
+        }
       }
     }
+  }
 
   "given invalid `ProductId` values" should {
     "return a validation failure" in {
-      val invalidProductIds = Seq("1smart-tv-01", "p[atagonia-32", "northface-100", "burton-00", "libtech-0", "union-bindings-202")
+      val invalidProductIds = Seq(
+        "1smart-tv-01",
+        "p[atagonia-32",
+        "northface-100",
+        "burton-00",
+        "libtech-0",
+        "union-bindings-202"
+      )
       invalidProductIds.foreach { productId =>
         ProductValidator.validateProductId(productId) match {
           case Left(invalid) => invalid shouldBe ProductIdInvalid
-          case _ => fail()
+          case _             => fail()
         }
       }
     }

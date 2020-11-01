@@ -18,11 +18,14 @@ object ProductsRatingsMain extends App {
 
   def calculate(csvFilePath: String): String = {
     val productsService = getProductsService
-    val eitherProductsRatingsSummary = productsService.getProductsRatingsSummary(csvFilePath)
+    val eitherProductsRatingsSummary =
+      productsService.getProductsRatingsSummary(csvFilePath)
 
     eitherProductsRatingsSummary match {
       case Right(productsRatingsSummary) =>
-        ProductsRatingsSummary.getProductsRatingsSummaryAsJson(productsRatingsSummary)
+        ProductsRatingsSummary.getProductsRatingsSummaryAsJson(
+          productsRatingsSummary
+        )
       case Left(failure) =>
         s"We could not calculate a products ratings summary for the given csv file, an error occurred," +
           s"details: ${failure.getClass.getSimpleName}: ${failure.getMessage}"
