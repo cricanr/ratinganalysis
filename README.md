@@ -137,7 +137,7 @@ scalafmtSbtCheck
 ```
 
 
-Useful links:
+# Useful links:
 1. Scalafmt: https://scalameta.org/scalafmt/
 2. Scala CSV Parser: https://github.com/tototoshi/scala-csv
 3. Cats Validated: https://typelevel.org/cats/datatypes/validated.html
