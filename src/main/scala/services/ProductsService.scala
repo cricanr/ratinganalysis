@@ -50,8 +50,8 @@ object ProductsService {
 
     val productsWithSortedRatingCount = productsWithRatingCount.toSeq.sortBy(_._2)
 
-    val mostRatedProducts = productsWithSortedRatingCount.takeRight(3).reverseIterator.map(_._1).toSeq
-    val lessRatedProducts = productsWithSortedRatingCount.take(3).map(_._1)
+    val mostRatedProducts = productsWithSortedRatingCount.takeRight(1).map(_._1).headOption.getOrElse("")
+    val lessRatedProducts = productsWithSortedRatingCount.headOption.map(_._1).getOrElse("")
 
     val productsRatingsSummary = ProductsRatingsSummary(countValidProducts,
       countInvalidProducts,

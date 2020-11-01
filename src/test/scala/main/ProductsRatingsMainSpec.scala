@@ -21,16 +21,8 @@ class ProductsRatingsMainSpec extends WordSpec with Matchers {
             |    "chain-01",
             |    "lights-01"
             |  ],
-            |  "mostRatedProducts" : [
-            |    "lights-02",
-            |    "saddle-01",
-            |    "chain-01"
-            |  ],
-            |  "lessRatedProducts" : [
-            |    "lights-01",
-            |    "chain-01",
-            |    "saddle-01"
-            |  ]
+            |  "mostRatedProduct" : "lights-02",
+            |  "lessRatedProduct" : "lights-01"
             |}""".stripMargin
 
       }

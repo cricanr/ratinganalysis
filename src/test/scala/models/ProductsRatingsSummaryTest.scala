@@ -9,8 +9,8 @@ class ProductsRatingsSummaryTest extends WordSpec with Matchers {
         val productsRatingsSummary = ProductsRatingsSummary(11, 2,
           Seq("volvo", "toyota", "mazda"),
           Seq("lada", "dacia", "vw"),
-          Seq("opel", "fiat", "citroen"),
-          Seq("lada", "trabant", "skoda"))
+          "opel",
+          "lada")
 
         ProductsRatingsSummary.getProductsRatingsSummaryAsJson(productsRatingsSummary) shouldBe
           """{
@@ -26,16 +26,8 @@ class ProductsRatingsSummaryTest extends WordSpec with Matchers {
             |    "dacia",
             |    "vw"
             |  ],
-            |  "mostRatedProducts" : [
-            |    "opel",
-            |    "fiat",
-            |    "citroen"
-            |  ],
-            |  "lessRatedProducts" : [
-            |    "lada",
-            |    "trabant",
-            |    "skoda"
-            |  ]
+            |  "mostRatedProduct" : "opel",
+            |  "lessRatedProduct" : "lada"
             |}""".stripMargin
       }
     }

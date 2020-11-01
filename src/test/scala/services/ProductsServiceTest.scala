@@ -100,8 +100,8 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
         summary.invalidLines shouldBe 0
         summary.bestRatedProducts shouldBe List("chain-04", "chain-01", "chain-02")
         summary.worstRatedProducts shouldBe List("chain-03", "chain-02", "chain-01")
-        summary.mostRatedProducts shouldBe List("chain-01", "chain-02", "chain-04")
-        summary.lessRatedProducts shouldBe List("chain-03", "chain-04", "chain-02")
+        summary.mostRatedProduct shouldBe "chain-01"
+        summary.lessRatedProduct shouldBe "chain-03"
       }
     }
 
@@ -117,8 +117,8 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
         summary.invalidLines shouldBe 0
         summary.bestRatedProducts shouldBe List("chain-01", "chain-02", "chain-03")
         summary.worstRatedProducts shouldBe List("chain-03", "chain-02", "chain-01")
-        summary.mostRatedProducts shouldBe List("chain-02", "chain-01", "chain-03")
-        summary.lessRatedProducts shouldBe List("chain-03", "chain-01", "chain-02")
+        summary.mostRatedProduct shouldBe "chain-02"
+        summary.lessRatedProduct shouldBe "chain-03"
       }
     }
 
@@ -134,8 +134,8 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
         summary.invalidLines shouldBe 0
         summary.bestRatedProducts shouldBe List("chain-01", "chain-03")
         summary.worstRatedProducts shouldBe List("chain-03", "chain-01")
-        summary.mostRatedProducts shouldBe List("chain-01", "chain-03")
-        summary.lessRatedProducts shouldBe List("chain-03", "chain-01")
+        summary.mostRatedProduct shouldBe "chain-01"
+        summary.lessRatedProduct shouldBe "chain-03"
       }
     }
 
@@ -147,8 +147,8 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
         summary.invalidLines shouldBe 0
         summary.bestRatedProducts shouldBe List.empty
         summary.worstRatedProducts shouldBe List.empty
-        summary.mostRatedProducts shouldBe List.empty
-        summary.lessRatedProducts shouldBe List.empty
+        summary.mostRatedProduct shouldBe ""
+        summary.lessRatedProduct shouldBe ""
       }
     }
 
@@ -162,8 +162,8 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
         summary.invalidLines shouldBe 0
         summary.bestRatedProducts shouldBe List("chain-01")
         summary.worstRatedProducts shouldBe List("chain-01")
-        summary.mostRatedProducts shouldBe List("chain-01")
-        summary.lessRatedProducts shouldBe List("chain-01")
+        summary.mostRatedProduct shouldBe "chain-01"
+        summary.lessRatedProduct shouldBe "chain-01"
       }
     }
 
@@ -181,8 +181,8 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
         summary.invalidLines shouldBe 1
         summary.bestRatedProducts shouldBe List("chain-01", "chain-02", "chain-03")
         summary.worstRatedProducts shouldBe List("chain-03", "chain-02", "chain-01")
-        summary.mostRatedProducts shouldBe List("chain-01", "chain-02", "chain-03")
-        summary.lessRatedProducts shouldBe List("chain-03", "chain-02", "chain-01")
+        summary.mostRatedProduct shouldBe "chain-01"
+        summary.lessRatedProduct shouldBe "chain-03"
       }
     }
 
@@ -200,8 +200,8 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
         summary.invalidLines shouldBe 5
         summary.bestRatedProducts shouldBe List.empty
         summary.worstRatedProducts shouldBe List.empty
-        summary.mostRatedProducts shouldBe List.empty
-        summary.lessRatedProducts shouldBe List.empty
+        summary.mostRatedProduct shouldBe ""
+        summary.lessRatedProduct shouldBe ""
       }
     }
 
@@ -230,8 +230,8 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
         summary.invalidLines shouldBe 1
         summary.bestRatedProducts shouldBe List("lights-02", "pandora-01", "lights-01")
         summary.worstRatedProducts shouldBe List("patagonia-01", "endura-01", "kors-01")
-        summary.mostRatedProducts shouldBe List("lights-02", "smarttv-01", "kors-01")
-        summary.lessRatedProducts shouldBe List("lights-01", "endura-01", "guess-01")
+        summary.mostRatedProduct shouldBe "lights-02"
+        summary.lessRatedProduct shouldBe "lights-01"
       }
     }
 
@@ -256,8 +256,8 @@ class ProductsServiceTest extends WordSpec with MockitoSugar with Matchers {
           summary.invalidLines shouldBe 0
           summary.bestRatedProducts shouldBe List("lights-02", "lights-01", "chain-01")
           summary.worstRatedProducts shouldBe List("saddle-01", "chain-01", "lights-01")
-          summary.mostRatedProducts shouldBe List("lights-02", "saddle-01", "chain-01")
-          summary.lessRatedProducts shouldBe List("lights-01", "chain-01", "saddle-01")
+          summary.mostRatedProduct shouldBe "lights-02"
+          summary.lessRatedProduct shouldBe "lights-01"
         }
       }
     }
